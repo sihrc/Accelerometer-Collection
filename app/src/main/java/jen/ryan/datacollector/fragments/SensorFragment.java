@@ -4,11 +4,15 @@ package jen.ryan.datacollector.fragments;
  * Created by Chris on 4/21/15.
  */
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +70,7 @@ public class SensorFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -85,16 +89,17 @@ public class SensorFragment extends Fragment {
         });
 
         rootView.findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View view) {
                 new AsyncTask<Void, Void, Void>() {
-                    File file;
+                    File file= new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + getDate(System.currentTimeMillis()) + ".csv");
 
                     @Override
                     protected Void doInBackground(Void... voids) {
-                        file = new File(context.getFilesDir() + "/" + getDate(System.currentTimeMillis()) + ".csv");
                         try {
                             FileOutputStream outputStream = new FileOutputStream(file);
+//                            Log.i("DebugDebug", outputStream.getFD().toString());
                             outputStream.write(sb.toString().getBytes());
                             outputStream.close();
                         } catch (IOException e) {
@@ -130,7 +135,7 @@ public class SensorFragment extends Fragment {
 
     public static String getDate(long milliSeconds) {
         // Create a DateFormatter object for displaying date in specified format.
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd_hh:mm:ss.SSS");
+        SimpleDateFormat formatter = new SimpleDateFormat("MM_dd_hh_mm_ss_SSS");
 
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         Calendar calendar = Calendar.getInstance();
