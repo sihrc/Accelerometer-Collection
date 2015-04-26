@@ -58,12 +58,14 @@ public class SensorFragment extends Fragment {
         SensorHelper.getInstance(context).setCallback(new ValuesCallback() {
             @Override
             public void handleValues(float[] values) {
+                String show = "";
                 if (sb != null) {
                     value = Arrays.toString(values);
-                    sb.append("\n").append(value.substring(1, value.length() - 1));
+                    show = value.substring(1, value.length() - 1) + ", " + System.currentTimeMillis();
+                    sb.append("\n").append(show);
                 }
                 if (console != null) {
-                    console.setText(sb.toString());
+                    console.setText(show);
                 }
             }
         });
