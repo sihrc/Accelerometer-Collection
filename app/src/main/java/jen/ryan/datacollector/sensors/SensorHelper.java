@@ -22,7 +22,7 @@ public class SensorHelper {
             instance = new SensorHelper();
             instance.context = context;
             instance.manager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-            instance.mAccelerometer =  instance.manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            instance.mAccelerometer =  instance.manager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         }
         return instance;
     }
@@ -34,11 +34,11 @@ public class SensorHelper {
     SensorEventListener sensorEventListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
-            if (event.sensor.getType() != Sensor.TYPE_ACCELEROMETER)
+            if (event.sensor.getType() != Sensor.TYPE_LINEAR_ACCELERATION)
                 return;
 
             if (callback != null)
-                callback.handleValues(event.values);
+                callback.handleValues(event.values, event.timestamp);
 
         }
 
@@ -49,7 +49,7 @@ public class SensorHelper {
     };
 
     public void onResume() {
-        manager.registerListener(sensorEventListener, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        manager.registerListener(sensorEventListener, mAccelerometer, 35);
     }
 
     public void onPause() {

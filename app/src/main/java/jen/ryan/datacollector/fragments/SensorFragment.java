@@ -57,11 +57,11 @@ public class SensorFragment extends Fragment {
         sb = new StringBuilder();
         SensorHelper.getInstance(context).setCallback(new ValuesCallback() {
             @Override
-            public void handleValues(float[] values) {
+            public void handleValues(float[] values, long timestamp) {
                 String show = "";
                 if (sb != null) {
                     value = Arrays.toString(values);
-                    show = value.substring(1, value.length() - 1) + ", " + System.currentTimeMillis();
+                    show = value.substring(1, value.length() - 1) + ", " + timestamp;
                     sb.append("\n").append(show);
                 }
                 if (console != null) {
